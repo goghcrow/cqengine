@@ -95,6 +95,19 @@ public abstract class QueryParser<O> {
         return objectType;
     }
 
+    public <A> Attribute<O, A> getAttribute(String attributeName, Class<A> expectedSuperType) {
+        Attribute<O, ?> attribute = attributes.get(attributeName);
+        if (attribute == null) {
+            throw new IllegalStateException("No such attribute has been registered with the parser: " + attributeName);
+        }
+        if (!expectedSuperType.isAssignableFrom(attribute.getAttributeType())) {
+            throw new IllegalStateException("Non-" + expectedSuperType.getSimpleName() + " attribute used in a query which requires a " + expectedSuperType.getSimpleName() + " attribute: " + attribute.getAttributeName());
+        }
+        @SuppressWarnings("unchecked")
+        Attribute<O, A> result = (Attribute<O, A>) attribute;
+        return result;
+    }
+
     public <A> Attribute<O, A> getAttribute(ParseTree attributeNameContext, Class<A> expectedSuperType) {
         String attributeName = parseValue(String.class, attributeNameContext.getText());
         Attribute<O, ?> attribute = attributes.get(attributeName);

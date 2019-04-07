@@ -24,7 +24,8 @@ import com.googlecode.cqengine.query.parser.sql.grammar.SQLGrammarParser;
 import com.googlecode.cqengine.query.parser.sql.support.FallbackValueParser;
 import com.googlecode.cqengine.query.parser.sql.support.SQLAntlrListener;
 import com.googlecode.cqengine.query.parser.sql.support.StringParser;
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import java.util.Map;
@@ -49,7 +50,8 @@ public class SQLParser<O> extends QueryParser<O> {
             if (query == null) {
                 throw new IllegalArgumentException("Query was null");
             }
-            SQLGrammarLexer lexer = new SQLGrammarLexer(new ANTLRInputStream(query));
+
+            SQLGrammarLexer lexer = new SQLGrammarLexer(CharStreams.fromString(query));
             lexer.removeErrorListeners();
             lexer.addErrorListener(SYNTAX_ERROR_LISTENER);
 
